@@ -42,16 +42,27 @@ as ordinary tools on any assistant instead of through that dedicated marketplace
 Create Assistant never creates an assistant on its first call:
 
 1. The assistant proposes a complete draft (name, description, system instructions, model,
-   tools, data sources) and calls Create Assistant without an approval ID. Nothing is created;
-   the tool returns a confirmation phrase.
+   tools, data sources) and calls Create Assistant without an approval ID. No assistant is created;
+   a temporary draft is stored for approval verification and the tool returns `CONFIRM CREATE`
+   in a copyable code block.
 2. The assistant asks the user to send that confirmation phrase back **verbatim**. A plain
    "yes" does not satisfy this step.
 3. Only in the turn where the user's message is exactly that phrase does the assistant call
    Create Assistant again, including the approval ID — and the assistant is created.
 
 Changing any field of the draft after the confirmation phrase was issued invalidates it; a new
-phrase must be requested for the updated draft. A confirmation phrase also expires and can only
-be used once.
+approval must be requested for the updated draft. Approval expires after five minutes and can
+only be used once. Used or replaced draft payloads are cleared; expired drafts are removed by
+periodic cleanup. One-shot test eligibility lasts 24 hours after creation and uses metadata
+without the draft payload.
+
+Project discovery returns at most 20 suggestions; `project_search` narrows project names.
+A selected project is checked directly, even if it was not among the suggestions. Credentials
+are checked only for selected tools before approval. Missing credentials block creation until
+the integrations are configured or the affected tools are removed.
+
+Creation requires an interactive chat request; workflows, background requests, and subagents
+cannot approve creation through these tools.
 
 :::info Duplicate Names
 If an assistant with the same name already exists, creation pauses and asks the user to either

@@ -37,7 +37,7 @@ attach it to a chat and describe the assistant to build.
 1. Start or open a chat with any assistant.
 2. Click the **Skills** button in the chat input field.
 3. In the **Attach Skills** modal, open the **Marketplace Skills** tab and select **Assistant
-   Creator**.
+   Creator** (`assistant-creator`). Search for `assistant` or `creator` if needed.
 4. Click **Confirm**.
 5. Describe the assistant to create, for example: "I need an assistant that reviews pull
    requests against our coding standards and summarizes risky changes."
@@ -55,25 +55,41 @@ skipped automatically when the initial description already provides enough infor
 2. **Clarify** — Asks follow-up questions only for details missing from the description, such
    as the assistant's purpose or the kind of tasks it should handle.
 3. **Discover** — Looks up what is available in the selected project: permitted models,
-   toolkits with ready credentials, project data sources, valid categories, and sharing modes.
-   Only resources accessible to the current user are considered.
+   toolkits, project data sources, valid categories, and sharing modes. Only resources accessible
+   to the current user are considered. Project suggestions are limited to 20 names and can be
+   narrowed by name. Credentials are checked for the selected tools before confirmation.
 4. **Draft** — Proposes a complete configuration: name, description, system instructions,
    model, tools, and data sources.
-5. **Review** — Presents the full draft for review before anything is created.
-6. **Confirm** — Shows the complete draft and returns a confirmation phrase. Nothing is
-   created until that exact phrase is sent back, verbatim, in a later message.
+5. **Review** — Presents the full draft before an assistant is created.
+6. **Confirm** — Temporarily saves the draft to verify approval and shows `CONFIRM CREATE`
+   in a copyable code block. No assistant is created until that exact phrase is sent back,
+   verbatim, in a later message. Approval expires after five minutes.
 7. **Create** — Creates the assistant once the confirmation phrase is confirmed.
 8. **Report** — Reports the outcome, including a link to the new assistant.
 9. **Optional test** — Offers to run a single test exchange against the new assistant. This
-   step only runs if explicitly requested, since it consumes model budget.
+   step only runs if explicitly requested within 24 hours of creation, since it consumes model budget.
 
 :::info Confirmation requires the exact phrase, not just "yes"
 Assistant Creator shows the complete draft configuration and asks for a confirmation phrase to
-be sent back verbatim before creating anything — a plain "yes" is not enough. Changing the
+be sent back verbatim before creating an assistant — a plain "yes" is not enough:
+
+```text
+CONFIRM CREATE
+```
+
+Changing the
 description, asking for a different model, or adding another tool during review updates the
 draft and invalidates any confirmation phrase already issued; a new one is requested from the
 next review.
 :::
+
+Missing credentials block creation. Configure the named integrations or remove the affected
+tools, then retry before the approval expires or request a new approval. The draft payload is
+cleared when approved or replaced; periodic cleanup removes expired drafts. Payload-free metadata
+is retained temporarily to support the one-shot test and is removed after its retention period.
+
+Creation runs in interactive chat. It is not available from automated workflow, background,
+or subagent requests. The confirmation tool result contains the stored draft for inspection.
 
 ## What Assistant Creator Can and Cannot Do
 
