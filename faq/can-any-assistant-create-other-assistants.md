@@ -10,8 +10,9 @@ This is the same underlying capability as the **Assistant Creator** marketplace 
 Tools makes it available directly on any assistant, instead of through that dedicated skill.
 
 An assistant is never created without explicit confirmation: the draft is shown first, and
-creation only happens once a confirmation phrase — returned with the draft — is sent back
-verbatim by the user.
+creation only happens once `CONFIRM CREATE` — returned with the draft — is sent back verbatim
+by the user in a later interactive chat message, within five minutes. Missing credentials for
+selected tools block creation until the integrations are configured or those tools are removed.
 
 Platform Tools also includes analytics tools (conversation metrics, spending, and usage
 insights); two of these are restricted to admin users.

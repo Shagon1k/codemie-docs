@@ -10,9 +10,10 @@ description: Tools for retrieving platform analytics and for creating and testin
 
 # Platform Tools
 
-**Platform Tools** is a built-in toolkit — no integration or credentials required. It groups
-two kinds of capability: retrieving platform analytics, and creating (and testing) assistants
-directly from a chat with any assistant that has this toolkit enabled.
+**Platform Tools** is a built-in toolkit that needs no integration setup. It groups two kinds
+of capability: retrieving platform analytics, and creating (and testing) assistants directly
+from a chat with any assistant that has this toolkit enabled. Tools selected for a new
+assistant may require their own integration credentials.
 
 ## Enabling Platform Tools
 
@@ -58,8 +59,11 @@ without the draft payload.
 
 Project discovery returns at most 20 suggestions; `project_search` narrows project names.
 A selected project is checked directly, even if it was not among the suggestions. Credentials
-are checked only for selected tools before approval. Missing credentials block creation until
-the integrations are configured or the affected tools are removed.
+are checked only for selected tools before approval is issued and again before it is used.
+Missing credentials block creation until the integrations are configured or the affected tools
+are removed; a failed check does not consume an existing approval. If the selected project is
+unavailable, creation is refused with up to 20 accessible alternatives and an indication of
+whether more projects are available.
 
 Creation requires an interactive chat request; workflows, background requests, and subagents
 cannot approve creation through these tools.

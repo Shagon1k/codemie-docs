@@ -52,7 +52,7 @@ The Marketplace provides filtering options to help you find relevant skills quic
 Enter keywords in the search box to find skills:
 
 - Search works in real-time as you type
-- Searches skill names and descriptions
+- Matches text within skill names, regardless of capitalization
 - Examples: "JIRA", "AWS", "deployment", "testing", "data analysis"
 - Useful for finding specific tools or use cases
 
@@ -92,7 +92,7 @@ You can also attach marketplace skills directly in a chat session without modify
 
 1. Open a chat with any assistant
 2. Click the **Skills** button in the chat input toolbar
-3. In the **Attach Skills** modal, switch to the **Marketplace Skills** tab
+3. In the **Attach Skills** modal, search for the skill by name in the combined list of available skills
 4. Select the skill and click **Confirm**
 
 The skill is active for the current conversation only. Other chats with the same assistant are not affected.

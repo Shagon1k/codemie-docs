@@ -36,8 +36,8 @@ attach it to a chat and describe the assistant to build.
 
 1. Start or open a chat with any assistant.
 2. Click the **Skills** button in the chat input field.
-3. In the **Attach Skills** modal, open the **Marketplace Skills** tab and select **Assistant
-   Creator** (`assistant-creator`). Search for `assistant` or `creator` if needed.
+3. In the **Attach Skills** modal, use **Search skills...** to find `assistant-creator`,
+   then select it from the list. Searching for `assistant` or `creator` also works.
 4. Click **Confirm**.
 5. Describe the assistant to create, for example: "I need an assistant that reviews pull
    requests against our coding standards and summarizes risky changes."
@@ -51,7 +51,9 @@ Assistant Creator guides the conversation through a fixed sequence of steps. Som
 skipped automatically when the initial description already provides enough information.
 
 1. **Project** — Confirms which project the assistant belongs to, from the projects
-   accessible to the current user.
+   accessible to the current user. If a named project is unavailable, creation stops and the
+   assistant suggests accessible alternatives. Suggestions contain at most 20 projects; narrow
+   the search if more projects are available.
 2. **Clarify** — Asks follow-up questions only for details missing from the description, such
    as the assistant's purpose or the kind of tasks it should handle.
 3. **Discover** — Looks up what is available in the selected project: permitted models,
@@ -84,9 +86,13 @@ next review.
 :::
 
 Missing credentials block creation. Configure the named integrations or remove the affected
-tools, then retry before the approval expires or request a new approval. The draft payload is
-cleared when approved or replaced; periodic cleanup removes expired drafts. Payload-free metadata
-is retained temporarily to support the one-shot test and is removed after its retention period.
+tools, then ask the assistant to review the draft again. Credentials are checked before approval
+is issued and again before it is used. A failed credential check does not consume an existing
+approval; an expired approval must be renewed.
+
+The draft payload is cleared when approval is used or replaced; periodic cleanup removes expired
+drafts. Payload-free metadata is retained temporarily to support the one-shot test and is removed
+after its retention period.
 
 Creation runs in interactive chat. It is not available from automated workflow, background,
 or subagent requests. The confirmation tool result contains the stored draft for inspection.
