@@ -197,7 +197,7 @@ max_concurrency: 10
 - **messages_limit_before_summarization**: Maximum messages before auto-summarization (default: 25)
 - **tokens_limit_before_summarization**: Maximum tokens before auto-summarization (default: 50000)
 - **enable_summarization_node**: Enable automatic result summarization (default: true)
-- **recursion_limit**: Maximum workflow execution steps (default: 50)
+- **recursion_limit**: Maximum logical passes through the workflow. LangGraph receives this value multiplied by the number of workflow states and internal nodes, capped at 5000 steps. If omitted, the budget is the greater of 50 steps and one complete pass, also capped at 5000.
 - **max_concurrency**: Maximum concurrent parallel state executions
 
 #### Workflow-Level Settings Examples:
@@ -274,7 +274,7 @@ states:
 ```yaml
 # Minimal resource usage for simple workflows
 enable_summarization_node: false  # Not needed for short workflows
-recursion_limit: 10               # Prevent runaway execution
+recursion_limit: 10               # Allow at most 10 logical passes
 max_concurrency: 1                # Sequential processing only
 messages_limit_before_summarization: 25  # Default (not used)
 
@@ -318,7 +318,7 @@ max_concurrency: 10
 | Setting           | Low Value   | High Value | Use Case                                             |
 | ----------------- | ----------- | ---------- | ---------------------------------------------------- |
 | `max_concurrency` | 1-5         | 20-100     | Low: Sequential logic; High: Batch processing        |
-| `recursion_limit` | 10-20       | 100-500    | Low: Simple workflows; High: Deep iterations         |
+| `recursion_limit` | 10-20 passes | 100-500 passes | Low: Simple workflows; High: Deep iterations         |
 | `messages_limit`  | 10-15       | 50-100     | Low: Aggressive summarization; High: Preserve detail |
 | `tokens_limit`    | 20000-30000 | 100000+    | Low: Cost optimization; High: Maximum context        |
 

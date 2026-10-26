@@ -854,7 +854,7 @@ Performance tuning optimizes workflow execution speed, resource usage, and relia
 
 From Section 3.2, two main settings control performance:
 
-- **recursion_limit**: Maximum workflow execution steps (default: 50)
+- **recursion_limit**: Maximum logical passes through the workflow. LangGraph receives this value multiplied by the number of workflow states and internal nodes, capped at 5000 steps. If omitted, the budget is the greater of 50 steps and one complete pass, also capped at 5000.
 - **max_concurrency**: Maximum concurrent parallel state executions
 
 #### Performance Tuning Examples
@@ -864,7 +864,7 @@ From Section 3.2, two main settings control performance:
 ```yaml
 # Optimized for maximum throughput
 enable_summarization_node: false  # Skip summarization overhead
-recursion_limit: 500              # Allow deep iteration
+recursion_limit: 500              # Allow deep iteration passes
 max_concurrency: 100              # Maximum parallelism
 messages_limit_before_summarization: 1000  # Not used
 
@@ -986,7 +986,7 @@ states:
 ```yaml
 # Optimized for workflows with many sequential steps
 enable_summarization_node: true
-recursion_limit: 200  # High limit for deep chains
+recursion_limit: 200  # High pass limit for deep chains
 max_concurrency: 5    # Lower concurrency
 messages_limit_before_summarization: 30
 tokens_limit_before_summarization: 60000
@@ -1009,12 +1009,12 @@ states:
     assistant_id: chain-processor
     task: "Step 50"
     # Automatic summarization keeps token count manageable
-    # High recursion_limit allows completion
+    # High recursion_limit allows repeated passes to complete
     next:
       state_id: end
 
 # Performance characteristics:
-# - Supports long sequential chains (up to 200 steps)
+# - Supports long sequential chains and up to 200 logical passes
 # - Summarization prevents context overflow
 # - Lower concurrency reduces resource spikes
 # - Each step builds on previous context
@@ -1094,7 +1094,7 @@ states:
 
 **Choosing `recursion_limit`:**
 
-| Workflow Type           | Recommended Limit | Rationale                       |
+| Workflow Type           | Recommended Pass Limit | Rationale                       |
 | ----------------------- | ----------------- | ------------------------------- |
 | Simple (< 10 states)    | 20-30             | Catch infinite loops early      |
 | Moderate (10-30 states) | 50-75             | Default, handles most workflows |
@@ -1135,7 +1135,7 @@ states:
 
 | Issue                    | Symptom                      | Solution                                      |
 | ------------------------ | ---------------------------- | --------------------------------------------- |
-| Recursion limit exceeded | Workflow fails after N steps | Increase `recursion_limit` or reduce states   |
+| Recursion limit exceeded | Workflow fails after its computed step budget (at most 5000) | Increase `recursion_limit`, reduce states, or fix a loop |
 | Context overflow         | Out of memory errors         | Enable summarization, reduce `messages_limit` |
 | Slow execution           | Workflow takes too long      | Increase `max_concurrency`, use faster models |
 | High costs               | Excessive token usage        | Use gpt-4.1-mini, enable summarization        |
